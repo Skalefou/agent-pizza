@@ -1,3 +1,5 @@
 /target
 sujet.md
-.idea
+.idea/
+Cargo.lock
+*.pdb
