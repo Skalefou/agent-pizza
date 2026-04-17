@@ -1,0 +1,311 @@
+<mxfile host="65bd71144e" pages="2">
+    <diagram id="diag-udp" name="1. Serveur-Serveur (Gossip UDP)">
+        <mxGraphModel dx="702" dy="563" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="600" math="0" shadow="0">
+            <root>
+                <mxCell id="udp_0"/>
+                <mxCell id="udp_1" parent="udp_0"/>
+                <mxCell id="udp_phase1" value="Phase 1 : Découverte et Échange des tables (CBOR via UDP)" style="shape=ext;rounded=1;html=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;align=center;verticalAlign=top;spacingLeft=10;spacingTop=5;fontStyle=1" parent="udp_1" vertex="1">
+                    <mxGeometry x="40" y="80" width="770" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_phase2" value="Phase 2 : Maintien en condition (Heartbeat UDP)" style="shape=ext;rounded=1;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;align=center;verticalAlign=top;spacingLeft=10;spacingTop=5;fontStyle=1" parent="udp_1" vertex="1">
+                    <mxGeometry x="40" y="340" width="760" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_nodeA" value="Nœud A (127.0.0.1:8000)&lt;br&gt;[MakeDough]" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="udp_1" vertex="1">
+                    <mxGeometry x="150" y="30" width="160" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_actA" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="udp_nodeA" vertex="1">
+                    <mxGeometry x="75" y="80" width="10" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_m1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="udp_nodeA" source="udp_actA" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="130" y="90"/>
+                            <mxPoint x="130" y="120"/>
+                        </Array>
+                        <mxPoint x="85" y="90" as="sourcePoint"/>
+                        <mxPoint x="85" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="UQO0R52RaPIR43C2XNfz-1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="udp_nodeA" vertex="1">
+                    <mxGeometry x="75" y="350" width="10" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_nodeB" value="Nœud B (127.0.0.1:8001)&lt;br&gt;[&lt;span style=&quot;font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; white-space: pre;&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;AddBase,AddCheese,AddPepperoni,Bake&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;]&lt;/span&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="udp_1" vertex="1">
+                    <mxGeometry x="468" y="30" width="290" height="500" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_actB" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="udp_nodeB" vertex="1">
+                    <mxGeometry x="138" y="120" width="10" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_m2" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="udp_nodeB" source="udp_actB" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="193" y="130"/>
+                            <mxPoint x="193" y="160"/>
+                        </Array>
+                        <mxPoint x="148" y="130" as="sourcePoint"/>
+                        <mxPoint x="148" y="160" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="UQO0R52RaPIR43C2XNfz-0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="udp_nodeB" vertex="1">
+                    <mxGeometry x="138" y="344" width="10" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_m3" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;" parent="udp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="605" y="238" as="sourcePoint"/>
+                        <mxPoint x="235" y="238" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="udp_m4" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;dashed=1;" parent="udp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="235" y="292" as="sourcePoint"/>
+                        <mxPoint x="605" y="292" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="udp_m5" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;" parent="udp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="235" y="403" as="sourcePoint"/>
+                        <mxPoint x="605" y="403" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="udp_t1" value="1. Démarre (UDP Port 8000)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="udp_1" vertex="1">
+                    <mxGeometry x="290" y="120" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_t2" value="1. Démarre (--peer 127.0.0.1:8001)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="udp_1" vertex="1">
+                    <mxGeometry x="620" y="130" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_t3" value="2. UDP [Announce]&lt;br&gt;{capabilities: [&quot;AddBase&quot;, ...], peers: []}" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="udp_1" vertex="1">
+                    <mxGeometry x="280" y="190" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_t4" value="UDP [Announce] (Propagation Gossip)&lt;br&gt;{capabilities: [&quot;MakeDough&quot;, ...], peers: [8001]}" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="udp_1" vertex="1">
+                    <mxGeometry x="270" y="240" width="280" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_t5" value="UDP [Ping] {last_seen, version: 1}" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="udp_1" vertex="1">
+                    <mxGeometry x="310" y="370" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_t6" value="UDP [Pong] {last_seen, version: 1}" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="udp_1" vertex="1">
+                    <mxGeometry x="310" y="410" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="jxHOMIK3OBClp8re5e4o-1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;dashed=1;" parent="udp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="605" y="442" as="sourcePoint"/>
+                        <mxPoint x="235" y="442" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="KBQxV9I9aL8AMoWoVg5A-1" value="Légende" style="swimlane;whiteSpace=wrap;html=1;fillColor=#CCCCCC;fontColor=#333333;strokeColor=#666666;labelBackgroundColor=none;swimlaneFillColor=#E6E6E6;" parent="udp_1" vertex="1">
+                    <mxGeometry x="860" y="110" width="291" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_leg_lifeline_t" value="Ligne de vie (Nœud réseau)" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="KBQxV9I9aL8AMoWoVg5A-1" vertex="1">
+                    <mxGeometry x="71" y="60" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_leg_act" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="KBQxV9I9aL8AMoWoVg5A-1" vertex="1">
+                    <mxGeometry x="30" y="114" width="10" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_leg_act_t" value="Barre d&#39;activation (Actif)" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="KBQxV9I9aL8AMoWoVg5A-1" vertex="1">
+                    <mxGeometry x="60" y="110" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_leg_m1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;" parent="KBQxV9I9aL8AMoWoVg5A-1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="10" y="175" as="sourcePoint"/>
+                        <mxPoint x="50" y="175" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="udp_leg_t1" value="Envoi de message (Push)" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="KBQxV9I9aL8AMoWoVg5A-1" vertex="1">
+                    <mxGeometry x="60" y="160" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="udp_leg_m2" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;dashed=1;" parent="KBQxV9I9aL8AMoWoVg5A-1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="10" y="215" as="sourcePoint"/>
+                        <mxPoint x="50" y="215" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="udp_leg_t2" value="Réponse / Propagation" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="KBQxV9I9aL8AMoWoVg5A-1" vertex="1">
+                    <mxGeometry x="60" y="200" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="KBQxV9I9aL8AMoWoVg5A-0" value="" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="KBQxV9I9aL8AMoWoVg5A-1" vertex="1">
+                    <mxGeometry x="7.5" y="40" width="55" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="(répète toutes les ~1-5 sec)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="udp_1" vertex="1">
+                    <mxGeometry x="310" y="470" width="170" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="diag-tcp" name="2. Client-Serveur (Production TCP)">
+        <mxGraphModel dx="669" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1350" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="tcp_0"/>
+                <mxCell id="tcp_1" parent="tcp_0"/>
+                <mxCell id="tcp_phase" value="Flux de Production Détaillé (Transfert TCP &amp;amp; Exécution)" style="shape=ext;rounded=1;html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;align=center;verticalAlign=top;spacingLeft=10;spacingTop=5;fontStyle=1" parent="tcp_1" vertex="1">
+                    <mxGeometry x="20" y="80" width="1070" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="B4NPoJEj8q0AB40qGSqH-0" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Nœud B (127.0.0.1:8001)&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;[&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-size: 14px; white-space: pre;&quot;&gt;AddBase,AddCheese,AddPepperoni,Bake&lt;/span&gt;&lt;span style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); background-color: transparent;&quot;&gt;]&lt;/span&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="tcp_1">
+                    <mxGeometry x="630" y="30" width="280" height="740" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_note" value="Note : Les handshakes TCP de bas niveau (SYN, SYN-ACK, ACK, FIN) sont volontairement omis de ce diagramme pour se concentrer sur le protocole applicatif métier." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2;fontColor=#666666;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="105" y="790" width="880" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_client" value="Client CLI" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#f5f5f5;strokeColor=#666666;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="60" y="30" width="100" height="740" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_nodeA" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Nœud A (127.0.0.1:8000)&lt;/span&gt;&lt;br style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;[MakeDough]&lt;/span&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="319" y="30" width="160" height="740" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_actC" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="105" y="130" width="10" height="550" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_actA" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="395" y="130" width="10" height="590" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_actB" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="765" y="350" width="10" height="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_m1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeWidth=2;" parent="tcp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="115" y="155" as="sourcePoint"/>
+                        <mxPoint x="395" y="155" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m2" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=#f8cecc;strokeColor=default;" parent="tcp_1" source="tcp_actA" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="460" y="170"/>
+                            <mxPoint x="460" y="220"/>
+                        </Array>
+                        <mxPoint x="405" y="170" as="sourcePoint"/>
+                        <mxPoint x="405" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m3" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;" parent="tcp_1" source="tcp_actA" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="460" y="250"/>
+                            <mxPoint x="460" y="300"/>
+                        </Array>
+                        <mxPoint x="405" y="250" as="sourcePoint"/>
+                        <mxPoint x="405" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m4" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeWidth=2;" parent="tcp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="405" y="372" as="sourcePoint"/>
+                        <mxPoint x="765" y="372" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m5" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=#f8cecc;strokeColor=default;" parent="tcp_1" source="tcp_actB" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="840" y="400"/>
+                            <mxPoint x="840" y="450"/>
+                        </Array>
+                        <mxPoint x="775" y="400" as="sourcePoint"/>
+                        <mxPoint x="775" y="450" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m6" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=#f8cecc;strokeColor=default;" parent="tcp_1" source="tcp_actB" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="840" y="480"/>
+                            <mxPoint x="840" y="530"/>
+                        </Array>
+                        <mxPoint x="775" y="480" as="sourcePoint"/>
+                        <mxPoint x="775" y="530" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m7" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;dashed=1;" parent="tcp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="765" y="698" as="sourcePoint"/>
+                        <mxPoint x="405" y="698" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_m8" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;dashed=1;" parent="tcp_1" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="395" y="621" as="sourcePoint"/>
+                        <mxPoint x="115" y="621" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="tcp_t1" value="1. TCP Connect + [Order]&#xa;{ recipe: [&quot;MakeDough&quot;, &quot;AddBase&quot;, &quot;Bake&quot;] }" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="125" y="100" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t2" value="2. Exécute l&#39;action : &quot;MakeDough&quot;&#xa;État de la pizza : &quot;Pâte prête&quot;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="470" y="175" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t3" value="3. Cherche dans sa table de routage&#xa;Qui peut faire &quot;AddBase&quot; ? -&gt; Nœud B (8002)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="470" y="255" width="240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t4" value="4. TCP Connect + [Forward]&#xa;{ product: &quot;Pâte prête&quot;, remaining: [&quot;AddBase&quot;, &quot;Bake&quot;] }" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="435" y="320" width="300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t5" value="5. Exécute l&#39;action : &quot;AddBase&quot;&#xa;État de la pizza : &quot;Pâte prête, Base tomate&quot;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="850" y="405" width="240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t6" value="6. Exécute l&#39;action : &quot;AddCheese&quot;&lt;br&gt;État de la pizza : &quot;Pâte prête, Base tomate, Fromage&quot;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="850" y="485" width="240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t7" value="8. TCP Response [Result]&lt;br&gt;{ status: OK, final_product: &quot;Pizza terminée&quot; }" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="435" y="692" width="300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tcp_t8" value="9. TCP Response [Result]&lt;br&gt;(Transfère le résultat final au client d&#39;origine)" style="text;html=1;align=center;verticalAlign=bottom;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="125" y="620" width="260" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-0" value="Légende" style="swimlane;whiteSpace=wrap;html=1;fillColor=#CCCCCC;fontColor=#333333;strokeColor=#666666;labelBackgroundColor=none;swimlaneFillColor=#E6E6E6;" parent="tcp_1" vertex="1">
+                    <mxGeometry x="1180" y="210" width="291" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-1" value="Ligne de vie (Nœud réseau)" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="ryzmVd6ED-Ho0ptAYGGP-0" vertex="1">
+                    <mxGeometry x="71" y="60" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="ryzmVd6ED-Ho0ptAYGGP-0" vertex="1">
+                    <mxGeometry x="30" y="114" width="10" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-3" value="Barre d&#39;activation (Actif)" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="ryzmVd6ED-Ho0ptAYGGP-0" vertex="1">
+                    <mxGeometry x="60" y="110" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-4" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;" parent="ryzmVd6ED-Ho0ptAYGGP-0" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="10" y="175" as="sourcePoint"/>
+                        <mxPoint x="50" y="175" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-5" value="Envoi de message (Push)" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="ryzmVd6ED-Ho0ptAYGGP-0" vertex="1">
+                    <mxGeometry x="60" y="160" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-6" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;dashed=1;" parent="ryzmVd6ED-Ho0ptAYGGP-0" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="10" y="215" as="sourcePoint"/>
+                        <mxPoint x="50" y="215" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-7" value="Réponse / Propagation" style="text;html=1;align=left;verticalAlign=middle;fillColor=none;strokeColor=none;" parent="ryzmVd6ED-Ho0ptAYGGP-0" vertex="1">
+                    <mxGeometry x="60" y="200" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="ryzmVd6ED-Ho0ptAYGGP-8" value="" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="ryzmVd6ED-Ho0ptAYGGP-0" vertex="1">
+                    <mxGeometry x="7.5" y="40" width="55" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="B4NPoJEj8q0AB40qGSqH-1" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=#f8cecc;strokeColor=default;" edge="1" parent="tcp_1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="839" y="554"/>
+                            <mxPoint x="839" y="604"/>
+                        </Array>
+                        <mxPoint x="774" y="554" as="sourcePoint"/>
+                        <mxPoint x="774" y="604" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="B4NPoJEj8q0AB40qGSqH-2" value="7. Exécute l&#39;action : &quot;AddPepperoni&quot;&lt;br&gt;&lt;font color=&quot;#000000&quot;&gt;État de la pizza : &quot;Pâte prête, Base tomate, Fromage, &lt;/font&gt;Pepperoni&lt;font color=&quot;#000000&quot;&gt;&quot;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" vertex="1" parent="tcp_1">
+                    <mxGeometry x="849" y="559" width="240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="B4NPoJEj8q0AB40qGSqH-3" style="html=1;verticalAlign=bottom;endArrow=block;edgeStyle=orthogonalEdgeStyle;rounded=0;fillColor=#f8cecc;strokeColor=default;" edge="1" parent="tcp_1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="840" y="637"/>
+                            <mxPoint x="840" y="687"/>
+                        </Array>
+                        <mxPoint x="775" y="637" as="sourcePoint"/>
+                        <mxPoint x="775" y="687" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="B4NPoJEj8q0AB40qGSqH-4" value="8. Exécute l&#39;action : &quot;Bake&quot;&lt;br&gt;&lt;font color=&quot;#000000&quot;&gt;État de la pizza : &quot;Pâte prête, Base tomate, Fromage, &lt;/font&gt;Pepperoni,,Cuite&lt;font color=&quot;#000000&quot;&gt;&quot;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;" vertex="1" parent="tcp_1">
+                    <mxGeometry x="850" y="642" width="240" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
