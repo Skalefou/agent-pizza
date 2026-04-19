@@ -139,3 +139,65 @@ pub struct ProductionErrorMsg {
     pub error: String,
     pub message: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn hex_decode(s: &str) -> Vec<u8> {
+        (0..s.len()).step_by(2)
+            .map(|i| u8::from_str_radix(&s[i..i+2], 16).unwrap())
+            .collect()
+    }
+
+    fn roundtrip<T: Serialize + for<'de> Deserialize<'de>>(v: &T) -> T {
+        let mut buf = Vec::new();
+        ciborium::ser::into_writer(v, &mut buf).unwrap();
+        ciborium::de::from_reader(buf.as_slice()).unwrap()
+    }
+
+    #[test]
+    fn test_list_recipes_est_bare_string() {
+        let mut buf = Vec::new();
+        ciborium::ser::into_writer(&ProductionProtocol::ListRecipes, &mut buf).unwrap();
+        let s: String = ciborium::de::from_reader(buf.as_slice()).unwrap();
+        assert_eq!(s, "list_recipes");
+    }
+
+    #[test]
+    fn test_decode_list_recipes_capture() {
+
+        let bytes = hex_decode("6c6c6973745f72656369706573");
+        let msg: ProductionProtocol = ciborium::de::from_reader(bytes.as_slice()).unwrap();
+        assert!(matches!(msg, ProductionProtocol::ListRecipes));
+    }
+
+    #[test]
+    fn test_decode_order_capture() {
+
+        let bytes = hex_decode("a1656f72646572a16b7265636970655f6e616d65695065707065726f6e69");
+        let msg: ProductionProtocol = ciborium::de::from_reader(bytes.as_slice()).unwrap();
+        if let ProductionProtocol::Order(o) = msg {
+            assert_eq!(o.recipe_name, "Pepperoni");
+        } else { panic!("attendu Order"); }
+    }
+
+    #[test]
+    fn test_decode_order_receipt_capture() {
+
+        let bytes = hex_decode("a16d6f726465725f72656365697074a1686f726465725f6964d825782437373466643365652d623238342d343063622d613361362d626638393239643762313333");
+        let msg: ProductionProtocol = ciborium::de::from_reader(bytes.as_slice()).unwrap();
+        if let ProductionProtocol::OrderReceipt(r) = msg {
+            assert_eq!(r.order_id, "774fd3ee-b284-40cb-a3a6-bf8929d7b133");
+        } else { panic!("attendu OrderReceipt"); }
+    }
+
+    #[test]
+    fn test_order_roundtrip() {
+        let msg = ProductionProtocol::Order(OrderMsg { recipe_name: "Margherita".to_string() });
+        let decoded = roundtrip(&msg);
+        if let ProductionProtocol::Order(o) = decoded {
+            assert_eq!(o.recipe_name, "Margherita");
+        } else { panic!("mauvais variant"); }
+    }
+}
