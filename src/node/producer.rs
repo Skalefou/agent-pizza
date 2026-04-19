@@ -8,10 +8,11 @@ use uuid::Uuid;
 
 use crate::node::state::NodeState;
 use crate::protocol::frame::{recv_message, send_message};
+use crate::protocol::gossip::CborAddr;
 use crate::protocol::production::{
-    ActionStep, CompletedOrderMsg, DeliverMsg, FailedOrderMsg, GetRecipeMsg,
-    MissingActions, OrderMsg, OrderReceiptMsg, ProcessPayloadMsg,
-    ProductionProtocol, RecipeAnswerMsg, RecipeListAnswerMsg,
+    ActionStep, CompletedOrderMsg, FailedOrderMsg, GetRecipeMsg,
+    OrderMsg, OrderReceiptMsg, ProcessPayloadMsg,
+    ProductionProtocol, RecipeAnswerMsg, RecipeAvailability, RecipeListAnswerMsg, RecipeStatus, Update,
 };
 
 pub fn start_producer_service(
@@ -41,11 +42,10 @@ fn handle_connection(state: Arc<RwLock<NodeState>>, mut stream: TcpStream) {
             Err(e) => { debug!("producer: {}: {}", peer, e); return; }
         };
         match msg {
-            ProductionProtocol::ListRecipes     => { handle_list_recipes(&state, &mut stream); }
-            ProductionProtocol::GetRecipe(r)    => { handle_get_recipe(&state, &mut stream, r); }
-            ProductionProtocol::Order(r)        => { handle_order(&state, &mut stream, r); return; }
+            ProductionProtocol::ListRecipes       => { handle_list_recipes(&state, &mut stream); }
+            ProductionProtocol::GetRecipe(r)      => { handle_get_recipe(&state, &mut stream, r); }
+            ProductionProtocol::Order(r)          => { handle_order(&state, &mut stream, r); return; }
             ProductionProtocol::ProcessPayload(p) => { handle_process_payload(&state, &mut stream, p); return; }
-            ProductionProtocol::Deliver(d)      => { handle_deliver(&mut stream, d); return; }
             other => warn!("producer: message inattendu: {:?}", other),
         }
     }
@@ -54,10 +54,13 @@ fn handle_connection(state: Arc<RwLock<NodeState>>, mut stream: TcpStream) {
 fn handle_list_recipes(state: &Arc<RwLock<NodeState>>, stream: &mut TcpStream) {
     let s = state.read().unwrap();
     let all_caps = s.all_capabilities();
-    let recipes: HashMap<String, MissingActions> = s.recipes.values().map(|r| {
+    let recipes: HashMap<String, RecipeAvailability> = s.recipes.values().map(|r| {
         let missing = r.missing_actions(&all_caps);
-        let ma = MissingActions::Local { missing_actions: missing };
-        (r.name.clone(), ma)
+        let avail = RecipeAvailability {
+            local: RecipeStatus { missing_actions: missing },
+            remote_peers: vec![],
+        };
+        (r.name.clone(), avail)
     }).collect();
     let _ = send_message(stream, &ProductionProtocol::RecipeListAnswer(
         RecipeListAnswerMsg { recipes }
@@ -78,7 +81,8 @@ fn handle_get_recipe(state: &Arc<RwLock<NodeState>>, stream: &mut TcpStream, req
 fn handle_order(state: &Arc<RwLock<NodeState>>, stream: &mut TcpStream, req: OrderMsg) {
     info!("producer: commande pour {}", req.recipe_name);
     let order_id = Uuid::new_v4().to_string();
-    let ts = now_ts();
+    let order_timestamp = now_micros();
+    let delivery_host = CborAddr(state.read().unwrap().host.clone());
 
     let _ = send_message(stream, &ProductionProtocol::OrderReceipt(OrderReceiptMsg {
         order_id: order_id.clone(),
@@ -101,23 +105,20 @@ fn handle_order(state: &Arc<RwLock<NodeState>>, stream: &mut TcpStream, req: Ord
     }).collect();
 
     if actions.is_empty() {
-        let result = serde_json::json!({ "order_id": order_id, "content": "", "updates": [] });
         let _ = send_message(stream, &ProductionProtocol::CompletedOrder(CompletedOrderMsg {
-            recipe_name: recipe.name, result: result.to_string(),
+            recipe_name: recipe.name, result: String::new(),
         }));
         return;
     }
 
     let payload = ProcessPayloadMsg {
-        order_id: order_id.clone(),
-        order_timestamp: ts,
-        delivery_host: state.read().unwrap().host.clone(),
+        order_id,
+        order_timestamp,
+        delivery_host,
         action_index: 0,
-        action_sequence: actions.clone(),
+        action_sequence: actions,
         content: String::new(),
         updates: vec![],
-        name: actions[0].name.clone(),
-        params: actions[0].params.clone(),
     };
 
     process_pipeline(state, stream, payload, recipe.name);
@@ -133,19 +134,6 @@ fn handle_process_payload(
     process_pipeline(state, stream, payload, recipe_name);
 }
 
-fn handle_deliver(stream: &mut TcpStream, msg: DeliverMsg) {
-    info!("producer: livraison commande {}", msg.order_id);
-    let result = serde_json::json!({
-        "order_id": msg.order_id,
-        "content": msg.content,
-        "updates": msg.updates,
-    });
-    let _ = send_message(stream, &ProductionProtocol::CompletedOrder(CompletedOrderMsg {
-        recipe_name: String::new(),
-        result: result.to_string(),
-    }));
-}
-
 fn process_pipeline(
     state: &Arc<RwLock<NodeState>>,
     stream: &mut TcpStream,
@@ -155,14 +143,8 @@ fn process_pipeline(
     loop {
         let idx = payload.action_index as usize;
         if idx >= payload.action_sequence.len() {
-            let result = serde_json::json!({
-                "order_id": payload.order_id,
-                "order_timestamp": payload.order_timestamp,
-                "content": payload.content,
-                "updates": payload.updates,
-            });
             let _ = send_message(stream, &ProductionProtocol::CompletedOrder(CompletedOrderMsg {
-                recipe_name, result: result.to_string(),
+                recipe_name, result: payload.content.clone(),
             }));
             return;
         }
@@ -171,8 +153,12 @@ fn process_pipeline(
         let can_do = state.read().unwrap().capabilities.contains(&action_name);
 
         if can_do {
+            let ts = now_micros();
             let new_content = execute_action(&action_name, &payload.action_sequence[idx].params, &payload.content);
-            payload.updates.push(format!("{}: done", action_name));
+            payload.updates.push(Update::Action {
+                action: payload.action_sequence[idx].clone(),
+                timestamp: ts,
+            });
             payload.content = new_content;
             payload.action_index += 1;
             info!("producer: {} effectuée (commande {})", action_name, payload.order_id);
@@ -180,8 +166,11 @@ fn process_pipeline(
             let peer_host = state.read().unwrap().find_peer_for_action(&action_name);
             match peer_host {
                 Some(host) => {
-                    payload.name = action_name.clone();
-                    payload.params = payload.action_sequence[idx].params.clone();
+                    let ts = now_micros();
+                    payload.updates.push(Update::Forward {
+                        to: CborAddr(host.clone()),
+                        timestamp: ts,
+                    });
                     info!("producer: transfer {} → {} pour {}", payload.order_id, host, action_name);
                     match forward_payload(&host, &payload) {
                         Ok(ProductionProtocol::CompletedOrder(c)) => {
@@ -232,7 +221,7 @@ fn forward_payload(host: &str, payload: &ProcessPayloadMsg) -> anyhow::Result<Pr
 }
 
 fn execute_action(name: &str, params: &HashMap<String, String>, current: &str) -> String {
-    let ps: Vec<String> = params.iter().map(|(k,v)| format!("{}={}", k, v)).collect();
+    let ps: Vec<String> = params.iter().map(|(k, v)| format!("{}={}", k, v)).collect();
     if ps.is_empty() {
         if current.is_empty() { name.to_string() } else { format!("{} | {}", current, name) }
     } else {
@@ -253,6 +242,6 @@ fn recipe_to_dsl(recipe: &crate::dsl::Recipe) -> String {
     lines.join("\n")
 }
 
-fn now_ts() -> i64 {
-    SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_micros() as i64
+fn now_micros() -> u64 {
+    SystemTime::now().duration_since(UNIX_EPOCH).unwrap_or_default().as_micros() as u64
 }
