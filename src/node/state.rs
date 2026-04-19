@@ -1,7 +1,6 @@
 use std::collections::HashMap;
-use std::time::Instant;
+use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use crate::dsl::Recipe;
-use rand;
 
 #[derive(Debug, Clone)]
 pub struct PeerInfo {
@@ -27,7 +26,10 @@ pub struct NodeState {
 
 impl NodeState {
     pub fn new(node_id: String, host: String, capabilities: Vec<String>) -> Self {
-        let node_generation_id = rand::random::<u32>() as u64;
+        let node_generation_id = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
         NodeState {
             node_id,
             host,
