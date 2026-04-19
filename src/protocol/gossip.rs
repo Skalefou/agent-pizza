@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use ciborium::value::Value;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -24,6 +25,46 @@ impl<'de> Deserialize<'de> for CborAddr {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct TaggedLastSeen(pub HashMap<String, u64>);
+
+impl Serialize for TaggedLastSeen {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        let map: Vec<(Value, Value)> = self.0.iter()
+            .map(|(k, v)| (Value::Text(k.clone()), Value::Integer(ciborium::value::Integer::from(*v))))
+            .collect();
+        Value::Tag(1001, Box::new(Value::Map(map))).serialize(s)
+    }
+}
+
+impl<'de> Deserialize<'de> for TaggedLastSeen {
+    fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        let v = Value::deserialize(d)?;
+        let inner = match v {
+            Value::Tag(1001, inner) => *inner,
+            other => other,
+        };
+        match inner {
+            Value::Map(map) => {
+                let mut result = HashMap::new();
+                for (k, v) in map {
+                    let key = match k {
+                        Value::Text(s) => s,
+                        _ => continue,
+                    };
+                    let val: u64 = match v {
+                        Value::Integer(i) => i128::from(i) as u64,
+                        _ => continue,
+                    };
+                    result.insert(key, val);
+                }
+                Ok(TaggedLastSeen(result))
+            }
+            _ => Err(serde::de::Error::custom("TaggedLastSeen : map attendue")),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerVersion {
     pub counter: u64,
@@ -31,10 +72,16 @@ pub struct PeerVersion {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Check {
+    pub last_seen: TaggedLastSeen,
+    pub version: PeerVersion,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum GossipMessage {
     Announce(AnnouncePayload),
-    Ping(PingPayload),
-    Pong(PongPayload),
+    Ping(Check),
+    Pong(Check),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -43,18 +90,6 @@ pub struct AnnouncePayload {
     pub capabilities: Vec<String>,
     pub recipes: Vec<String>,
     pub peers: Vec<CborAddr>,
-    pub version: PeerVersion,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PingPayload {
-    pub node_addr: CborAddr,
-    pub version: PeerVersion,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PongPayload {
-    pub node_addr: CborAddr,
     pub version: PeerVersion,
 }
 
@@ -67,7 +102,6 @@ mod tests {
         let addr = CborAddr("127.0.0.1:8001".to_string());
         let mut buf = Vec::new();
         ciborium::ser::into_writer(&addr, &mut buf).unwrap();
-
         assert_eq!(&buf[..3], &[0xd9, 0x01, 0x04]);
         let decoded: CborAddr = ciborium::de::from_reader(buf.as_slice()).unwrap();
         assert_eq!(decoded.0, "127.0.0.1:8001");
@@ -92,8 +126,23 @@ mod tests {
     }
 
     #[test]
-    fn test_decode_announce_capture() {
+    fn test_ping_pong_check_roundtrip() {
+        let mut last_seen_map = HashMap::new();
+        last_seen_map.insert("127.0.0.1:8002".to_string(), 1_773_591_739u64);
+        let msg = GossipMessage::Ping(Check {
+            last_seen: TaggedLastSeen(last_seen_map),
+            version: PeerVersion { counter: 3, generation: 1_773_591_739 },
+        });
+        let mut buf = Vec::new();
+        ciborium::ser::into_writer(&msg, &mut buf).unwrap();
+        let decoded: GossipMessage = ciborium::de::from_reader(buf.as_slice()).unwrap();
+        if let GossipMessage::Ping(c) = decoded {
+            assert_eq!(c.version.counter, 3);
+        } else { panic!("attendu Ping"); }
+    }
 
+    #[test]
+    fn test_decode_announce_capture() {
         let hex = "a168416e6e6f756e6365a5696e6f64655f61646472d901046e3132372e302e302e313a383035306c6361706162696c697469657381675465737443617067726563697065738065706565727381d901046e3132372e302e302e313a383039396776657273696f6ea267636f756e746572016a67656e65726174696f6e1a69d54b4c";
         let bytes: Vec<u8> = (0..hex.len()).step_by(2)
             .map(|i| u8::from_str_radix(&hex[i..i+2], 16).unwrap())
