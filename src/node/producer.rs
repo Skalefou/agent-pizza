@@ -53,15 +53,29 @@ fn handle_connection(state: Arc<RwLock<NodeState>>, mut stream: TcpStream) {
 
 fn handle_list_recipes(state: &Arc<RwLock<NodeState>>, stream: &mut TcpStream) {
     let s = state.read().unwrap();
-    let all_caps = s.all_capabilities();
-    let recipes: HashMap<String, RecipeAvailability> = s.recipes.values().map(|r| {
-        let missing = r.missing_actions(&all_caps);
+    let local_caps = &s.capabilities;
+
+    let mut recipes: HashMap<String, RecipeAvailability> = s.recipes.values().map(|r| {
+        let missing = r.missing_actions(local_caps);
         let avail = RecipeAvailability {
             local: RecipeStatus { missing_actions: missing },
             remote_peers: vec![],
         };
         (r.name.clone(), avail)
     }).collect();
+
+    for (peer_addr, peer_info) in &s.peers {
+        for recipe_name in &peer_info.recipes {
+            recipes.entry(recipe_name.clone())
+                .or_insert_with(|| RecipeAvailability {
+                    local: RecipeStatus { missing_actions: vec![] },
+                    remote_peers: vec![],
+                })
+                .remote_peers
+                .push(peer_addr.clone());
+        }
+    }
+
     let _ = send_message(stream, &ProductionProtocol::RecipeListAnswer(
         RecipeListAnswerMsg { recipes }
     ));
